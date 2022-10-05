@@ -1,0 +1,198 @@
+proc sql;
+	select *
+	from  A.internationalFlights;
+quit;
+proc sql;
+	select distinct FlightNumber,
+	Destination
+	from A.InternationalFlights;
+quit;
+proc sql;
+	select EmpID, JobCode, Salary
+		from A.Payrollmaster
+		where Salary > 112000;
+quit;
+
+
+proc sql;
+	select Name, FFID
+	from A.Frequentflyers
+	where Name like '%, N%' ;
+quit;
+
+proc sql;
+	select EmpID, JobCode
+	from A.Payrollmaster
+	where Jobcode like 'F__' ;
+quit;
+
+proc sql;
+	select EmpID, JobCode
+	from A.Payrollmaster
+	where Jobcode like 'F%' ;
+quit;
+
+
+proc sql;
+	select FlightNumber, Date, Destination, Boarded + Transferred + Nonrevenue
+		as Total
+	from A.MarchFlights
+	where  calculated Total<100 ;
+quit;
+
+proc sql;
+	select FlightNumber, Date, Destination, Boarded + Transferred + Nonrevenue
+		as Total, calculated Total/2 as half
+	from A.MarchFlights;
+quit;
+
+proc sql;
+	select FlightNumber, Date, Destination,SUM( Boarded , Transferred ,Nonrevenue)
+		as Total, PassengerCapacity
+	from A.MarchFlights
+	where  calculated Total/PassengerCapacity < 1/3 ;
+quit;
+
+
+proc sql;
+	select EmpID, JobCode, Salary
+	from A.payrollmaster
+	where JobCode contains 'NA'
+	order by Salary desc ;
+quit;
+
+proc sql;
+	select EmpID, JobCode, Salary
+	from A.payrollmaster
+	where JobCode contains 'NA'
+	order by Salary  ;
+quit;
+
+
+proc sql;
+	select FlightNumber, Date, Origin, Destination, Boarded + Transferred + Nonrevenue
+	from a.marchflights
+	where Destination = 'LHR'
+	order by Date, 5 desc;
+quit;
+
+proc sql;
+	select FlightNumber, Date, Origin, Destination, Boarded + Transferred + Nonrevenue
+	from a.marchflights
+	where Destination = 'LHR'
+	order by Date desc, 5 desc;
+quit;
+
+
+proc sql; 
+	select EmpID label = 'Employee Identifier',
+			JobCode label = 'Job Code',
+			Salary label = 'Annual Salary' 
+				format= dollar12.2
+	from a.payrollmaster
+	where JobCode contains 'NA'
+	order by Salary desc;
+quit;
+
+proc sql ; 
+title 'Current Bonus Information';
+title2 'Navigators - All Levels';
+	select EmpID label = 'Employee Identifier', 'Bonus is : ',
+			Salary *.05 format=dollar12.2
+	from a.payrollmaster
+	where JobCode contains 'NA'
+	order by salary desc;
+quit;
+
+proc sql;
+	select EmpID, Gender, JobCode, Salary,
+		Salary/3 as Tax
+	from a.payrollmaster
+	where Gender like 'M'
+	order by Salary desc;
+quit;
+
+proc sql;
+	select avg(Salary) as MeanSalary
+	from a.payrollmaster ;
+quit;
+
+proc means data = a.payrollmaster mean;
+	var Salary;
+run;
+
+
+proc sql;
+	select JobCode, avg(Salary) as average format=dollar11.2
+	from a.payrollmaster
+	group by JobCode;
+quit;
+proc sql;
+	select JobCode, sum(Salary) as average format=dollar11.2
+	from a.payrollmaster
+	group by JobCode;
+quit;
+
+proc sql;
+	select count(*) as count
+	from a.payrollmaster;
+quit;
+
+proc sql;
+	select substr(JobCode,1,2) label = 'Job Category', count(*) as count
+	from a.payrollmaster
+	group by 1;
+quit;
+
+proc sql;
+	select substr(JobCode,1,2) as JC  label = 'Job Category', count(*) as count
+	from a.payrollmaster
+	group by calculated JC;
+quit;
+
+proc sql ;
+	select EmpID, Salary, (Salary/sum(Salary)) as percent format = percent8.2
+	from a.payrollmaster
+	where JobCode contains 'NA';
+quit;
+
+
+proc sql;
+	select JobCode, avg(Salary) as average format dollar11.2
+	from a.payrollmaster
+	group by JobCode
+	having avg(Salary) > 56000;
+quit;
+
+proc sql;
+	select JobCode, avg(Salary) as average format dollar11.2
+	from a.payrollmaster
+	group by JobCode
+	having calculated average > 56000;
+quit;
+
+proc sql;
+	select Delay, (Delay > 0) as Late
+	from a.Flightdelays;
+quit;
+
+proc sql;
+	select sum(Delay > 0) as Late,
+	sum(Delay <= 0) as Early,
+	calculated Late/
+	(calculated Late + calculated Early)
+	as Probability
+	from a.flightdelays;
+quit;
+
+proc sql;
+	select EmpID, DateOfHire, (year(today())-year(DateOfHire)) as workingperiod
+	from a.payrollmaster;
+quit;
+
+proc sql;
+	select State, count(EmpID)
+	from a.staffmaster
+	group by State
+	order by 2 desc;
+quit;

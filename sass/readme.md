@@ -22,4 +22,20 @@
 - percent
 - having
 - boolean
-- 
+### 10/04 ch4
+- subquery
+- in
+- any
+- notexists
+### 10/11 ch5
+- join
+- innerjoin
+- outerjoin
+- coalesce
+### 10/18 ch6
+- except
+- intersect
+- union
+- corr
+### 11/1 ch7
+
